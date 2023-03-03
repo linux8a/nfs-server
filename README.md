@@ -1,5 +1,7 @@
 # linux8a/nfs-server
 
+[![Docker Image CI](https://github.com/linux8a/nfs-server/actions/workflows/docker-image.yml/badge.svg)](https://github.com/linux8a/nfs-server/actions/workflows/docker-image.yml)
+
 A handy NFS Server image comprising Alpine Linux and NFS v4 only, over TCP on port 2049.
 
 ## Overview
