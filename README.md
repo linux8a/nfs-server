@@ -259,6 +259,6 @@ Startup successful.
 
 * use
 
-```
+```sh
 docker-compose up -d
 ```
