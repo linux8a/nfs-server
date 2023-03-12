@@ -27,4 +27,4 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/nfs-server:latest
-        if: steps.check.outputs.needs-updating == 'true'
+        # if: steps.check.outputs.needs-updating == 'true'
