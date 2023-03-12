@@ -54,7 +54,7 @@ See the following sub-sections for information on doing the same in non-interact
 
 As reported here https://github.com/sjiveson/nfs-server-alpine/issues/8 it appears Kubernetes requires the `privileged: true` option to be set:
 
-```
+```yml
 spec:
   containers:
   - name: ...
@@ -65,7 +65,7 @@ spec:
 
 To use capabilities instead:
 
-```
+```yml
 spec:
   containers:
   - name: ...
@@ -81,13 +81,13 @@ Note that AllowPrivilegeEscalation is automatically set to true when privileged 
 
 When using Docker Compose you can specify privileged mode like so:
 
-```
+```yml
 privileged: true
 ```
 
 To use capabilities instead:
 
-```
+```yml
 cap_add:
   - SYS_ADMIN
   - SETPCAP
@@ -97,14 +97,14 @@ cap_add:
 
 You may need to do this at the CLI to get things working:
 
-```
+```sh
 sudo ros service enable kernel-headers
 sudo ros service up kernel-headers
 ```
 
 Alternatively you can add this to the host's **cloud-config.yml** (or user data on the cloud):
 
-```
+```yml
 #cloud-config
 rancher:
   services_include:
@@ -127,7 +127,7 @@ You may need to ensure the **nfs** and **nfsd** kernel modules are loaded by run
 
 You'll need to use this label if you are using host network mode and want other services to resolve the NFS service's name via Rancher DNS:
 
-```
+```yml
   labels:
     io.rancher.container.dns: 'true'
 ```
@@ -143,13 +143,14 @@ This image can be used to export and share multiple directories with a little mo
 > Note its far easier to volume mount multiple directories as subdirectories of the root/first and share the root.
 
 To share multiple directories you'll need to mount additional volumes and specify additional environment variables in your docker run command. Here's an example:
-```
+
+```sh
 docker run -d --name nfs --privileged -v /some/where/fileshare:/nfsshare -v /some/where/else:/nfsshare/another -e SHARED_DIRECTORY=/nfsshare -e SHARED_DIRECTORY_2=/nfsshare/another linux8a/nfs-server:latest
 ```
 
 You should then modify the **nfsd.sh** file to process the extra environment variables and add entries to the exports file. I've already included a working example to get you started:
 
-```
+```sh
 if [ ! -z "${SHARED_DIRECTORY_2}" ]; then
   echo "Writing SHARED_DIRECTORY_2 to /etc/exports file"
   echo "{{SHARED_DIRECTORY_2}} {{PERMITTED}}({{READ_ONLY}},{{SYNC}},no_subtree_check,no_auth_nlm,insecure,no_root_squash)" >> /etc/exports
@@ -159,7 +160,7 @@ fi
 
 You'll find you can now mount the root share as normal and the second shared directory will be available as a subdirectory. However, you should now be able to mount the second share directly too. In both cases you don't need to specify the root directory name with the mount commands. Using the `docker run` command above to start a container using this image, the two mount commands would be:
 
-```
+```sh
 sudo mount -v 10.11.12.101:/ /mnt/one
 sudo mount -v 10.11.12.101:/another /mnt/two
 ```
@@ -170,7 +171,7 @@ You might want to make the root share read only, or even make it inaccessible, t
 
 A successful server start should produce log output like this:
 
-```
+```log
 Writing SHARED_DIRECTORY to /etc/exports file
 The PERMITTED environment variable is unset or null, defaulting to '*'.
 This means any client can mount.
