@@ -23,8 +23,8 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
-          context: .
-          file: ./dockerfile/Dockerfile
+          context: ./dockerfile
+          file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/nfs-server:latest
         # if: steps.check.outputs.needs-updating == 'true'
