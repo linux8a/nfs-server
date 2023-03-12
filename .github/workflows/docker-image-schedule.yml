@@ -32,7 +32,7 @@ jobs:
     - name: Build and push
       uses: docker/build-push-action@v4
       with:
-        context: dockerfile
+        context: .
         file: ./Dockerfile
         push: true
         tags: ${{ secrets.DOCKER_USERNAME }}/nfs-server:latest
@@ -41,7 +41,7 @@ jobs:
     - name: Build and push
       uses: docker/build-push-action@v4
       with:
-        context: dockerfile
+        context: .
         file: ./Dockerfile
         push: true
         tags: ${{ secrets.DOCKER_USERNAME }}/nfs-server:$(date +%s)
