@@ -11,6 +11,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Get current date
+      id: date
+      run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+      
     - uses: actions/checkout@v3
     - name: Check if update available
       id: check
@@ -35,14 +39,5 @@ jobs:
         context: "{{defaultContext}}:dockerfile"
         file: ./Dockerfile
         push: true
-        tags: ${{ secrets.DOCKER_USERNAME }}/nfs-server:latest
-      if: steps.check.outputs.needs-updating == 'true'
-
-    - name: Build and push
-      uses: docker/build-push-action@v4
-      with:
-        context: "{{defaultContext}}:dockerfile" 
-        file: ./Dockerfile
-        push: true
-        tags: ${{ secrets.DOCKER_USERNAME }}/nfs-server:$(date +%s)
+        tags: ${{ secrets.DOCKER_USERNAME }}/nfs-server:latest,${{ secrets.DOCKER_USERNAME }}/nfs-server:${{ steps.date.outputs.date }}
       if: steps.check.outputs.needs-updating == 'true'
