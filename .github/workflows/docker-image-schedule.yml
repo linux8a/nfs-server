@@ -20,8 +20,8 @@ jobs:
       id: check
       uses: lucacome/docker-image-update-checker@v1
       with:
-        base-image: alpine:latest
-        image: linux8a/nfs-server:latest
+        base-image: library/alpine:latest
+        image: ${{ secrets.DOCKER_USERNAME }}/nfs-server:latest
 
     - name: Login to DockerHub
       uses: docker/login-action@v1
